@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_ui/components/roundbutton.dart';
 import 'package:flutter_firebase_ui/screens/login_screen.dart';
@@ -18,6 +19,9 @@ class _SignupScreenState extends State<SignupScreen> {
 
   // Password controller
   final passwordcontroller = TextEditingController();
+
+  // initializing an instance of the FirebaseAuth class
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   //disposing email and password controller mean release this controller from memory when screen is not open
   @override
@@ -80,7 +84,12 @@ class _SignupScreenState extends State<SignupScreen> {
             RoundButton(
               title: 'Sign up',
               onTap: () {
-                if (_formkey.currentState!.validate()) {}
+                if (_formkey.currentState!.validate()) {
+                  //Creating new account with firebase
+                  _auth.createUserWithEmailAndPassword(
+                      email: emailcontroller.text.toString(),
+                      password: passwordcontroller.text.toString());
+                }
               },
             ),
             const SizedBox(
@@ -92,7 +101,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 const Text('Already have an account ?'),
                 TextButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: ((context) => const LoginScreen())));

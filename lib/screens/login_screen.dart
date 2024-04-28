@@ -92,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Text('Don\'t have an account'),
                 TextButton(
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: ((context) => const SignupScreen())));
