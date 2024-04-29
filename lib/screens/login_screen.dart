@@ -1,8 +1,12 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_ui/Providers/loadingcircleprovider.dart';
 import 'package:flutter_firebase_ui/components/roundbutton.dart';
+import 'package:flutter_firebase_ui/screens/homescreen.dart';
 import 'package:flutter_firebase_ui/screens/signup_screen.dart';
 import 'package:flutter_firebase_ui/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -23,9 +27,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // Initializing firebaseAuth instance
 
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  //disposing email and password controller mean release this controller from memory when screen is not open
+  //disposing email and password controller mean release this text field controller from memory when screen is not open
   @override
   void dispose() {
     super.dispose();
@@ -34,35 +38,34 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   //Login Function
-  void login() async {
-    // _auth
-    //     .signInWithEmailAndPassword(
-    //         email: emailcontroller.text.toString(),
-    //         password: passwordcontroller.text.toString())
-    //     .then((value) {
-    //   Utils.toastmsg(context, value.user!.email.toString());
-    // }).onError((error, stackTrace) {
-    //   debugPrint(error.toString());
-    //   Utils.toastmsg(context, error.toString());
-    // });
+  void login(BuildContext context, LoadingCircleProvider loadingcircle) async {
+    // CircularProgressIndicator start moving
+    loadingcircle.loading = true;
 
-    try {
-      await _auth.signInWithEmailAndPassword(
-          email: emailcontroller.text, password: passwordcontroller.text);
-    } on FirebaseAuthException catch (e) {
-      debugPrint(e.message);
-      debugPrint(e.code);
-      if (e.code == 'user-not-found') {
-        debugPrint('The account does not exist');
-      }
-      if (e.code == 'wrong-password') {
-        debugPrint('Incorrect password. Please try again.');
-      }
-    }
+    _auth
+        .signInWithEmailAndPassword(
+      email: emailcontroller.text.toString(),
+      password: passwordcontroller.text.toString(),
+    )
+        .then((value) {
+      // CircularProgressIndicator stop when account login successfully
+      loadingcircle.loading = false;
+
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      Utils.toastmsg(context, value.user!.email.toString());
+    }).onError((error, stackTrace) {
+      // CircularProgressIndicator stop when account not login successfully
+      loadingcircle.loading = false;
+
+      debugPrint(error.toString());
+      Utils.toastmsg(context, error.toString());
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('LoginScreen build');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple[200],
@@ -111,12 +114,18 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(
               height: 50,
             ),
-            RoundButton(
-              title: 'Login',
-              onTap: () {
-                if (_formkey.currentState!.validate()) {
-                  login();
-                }
+
+            // Using consumer to rebuild login RoundButton
+            Consumer<LoadingCircleProvider>(
+              builder: (context, loadingCircle, child) {
+                return RoundButton(
+                  title: 'Login',
+                  onTap: () {
+                    if (_formkey.currentState!.validate()) {
+                      login(context, loadingCircle);
+                    }
+                  },
+                );
               },
             ),
             const SizedBox(
@@ -125,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Don\'t have an account'),
+                const Text('Don\'t have an account ?'),
                 TextButton(
                     onPressed: () {
                       Navigator.pushReplacement(

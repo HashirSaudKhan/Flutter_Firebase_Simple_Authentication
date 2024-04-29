@@ -37,7 +37,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('build');
+    print('Sign up build');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple[200],
@@ -87,7 +87,6 @@ class _SignupScreenState extends State<SignupScreen> {
               height: 50,
             ),
             RoundButton(
-              loading: loading,
               title: 'Sign up',
               onTap: () {
                 if (_formkey.currentState!.validate()) {
