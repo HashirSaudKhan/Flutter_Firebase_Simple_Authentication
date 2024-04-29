@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_ui/components/roundbutton.dart';
 import 'package:flutter_firebase_ui/screens/signup_screen.dart';
+import 'package:flutter_firebase_ui/utils/utils.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,12 +21,44 @@ class _LoginScreenState extends State<LoginScreen> {
   // Password controller
   final passwordcontroller = TextEditingController();
 
+  // Initializing firebaseAuth instance
+
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
   //disposing email and password controller mean release this controller from memory when screen is not open
   @override
   void dispose() {
     super.dispose();
     emailcontroller.dispose();
     passwordcontroller.dispose();
+  }
+
+  //Login Function
+  void login() async {
+    // _auth
+    //     .signInWithEmailAndPassword(
+    //         email: emailcontroller.text.toString(),
+    //         password: passwordcontroller.text.toString())
+    //     .then((value) {
+    //   Utils.toastmsg(context, value.user!.email.toString());
+    // }).onError((error, stackTrace) {
+    //   debugPrint(error.toString());
+    //   Utils.toastmsg(context, error.toString());
+    // });
+
+    try {
+      await _auth.signInWithEmailAndPassword(
+          email: emailcontroller.text, password: passwordcontroller.text);
+    } on FirebaseAuthException catch (e) {
+      debugPrint(e.message);
+      debugPrint(e.code);
+      if (e.code == 'user-not-found') {
+        debugPrint('The account does not exist');
+      }
+      if (e.code == 'wrong-password') {
+        debugPrint('Incorrect password. Please try again.');
+      }
+    }
   }
 
   @override
@@ -80,7 +114,9 @@ class _LoginScreenState extends State<LoginScreen> {
             RoundButton(
               title: 'Login',
               onTap: () {
-                if (_formkey.currentState!.validate()) {}
+                if (_formkey.currentState!.validate()) {
+                  login();
+                }
               },
             ),
             const SizedBox(

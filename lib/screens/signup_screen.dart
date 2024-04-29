@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_ui/components/roundbutton.dart';
 import 'package:flutter_firebase_ui/screens/login_screen.dart';
+import 'package:flutter_firebase_ui/utils/utils.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -11,6 +12,9 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  //loading circle
+  bool loading = false;
+
   // for validation
   final _formkey = GlobalKey<FormState>();
 
@@ -33,6 +37,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('build');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurple[200],
@@ -82,13 +87,28 @@ class _SignupScreenState extends State<SignupScreen> {
               height: 50,
             ),
             RoundButton(
+              loading: loading,
               title: 'Sign up',
               onTap: () {
                 if (_formkey.currentState!.validate()) {
+                  setState(() {
+                    loading = true;
+                  });
                   //Creating new account with firebase
-                  _auth.createUserWithEmailAndPassword(
-                      email: emailcontroller.text.toString(),
-                      password: passwordcontroller.text.toString());
+                  _auth
+                      .createUserWithEmailAndPassword(
+                          email: emailcontroller.text.toString(),
+                          password: passwordcontroller.text.toString())
+                      .then((value) {
+                    setState(() {
+                      loading = false;
+                    });
+                  }).onError((error, stackTrace) {
+                    setState(() {
+                      loading = false;
+                    });
+                    Utils.toastmsg(context, error.toString());
+                  });
                 }
               },
             ),
