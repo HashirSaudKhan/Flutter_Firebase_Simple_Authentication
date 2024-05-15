@@ -46,6 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '626201418297',
     projectId: 'dummy-da4f8',
     authDomain: 'dummy-da4f8.firebaseapp.com',
+    databaseURL: 'https://dummy-da4f8-default-rtdb.firebaseio.com',
     storageBucket: 'dummy-da4f8.appspot.com',
     measurementId: 'G-Q79HQKSV6P',
   );
@@ -55,6 +56,7 @@ class DefaultFirebaseOptions {
     appId: '1:626201418297:android:6674364383de52ec550be8',
     messagingSenderId: '626201418297',
     projectId: 'dummy-da4f8',
+    databaseURL: 'https://dummy-da4f8-default-rtdb.firebaseio.com',
     storageBucket: 'dummy-da4f8.appspot.com',
   );
 
@@ -63,6 +65,7 @@ class DefaultFirebaseOptions {
     appId: '1:626201418297:ios:5ec12c64d558e300550be8',
     messagingSenderId: '626201418297',
     projectId: 'dummy-da4f8',
+    databaseURL: 'https://dummy-da4f8-default-rtdb.firebaseio.com',
     storageBucket: 'dummy-da4f8.appspot.com',
     iosBundleId: 'com.example.flutterFirebaseUi',
   );
@@ -72,6 +75,7 @@ class DefaultFirebaseOptions {
     appId: '1:626201418297:ios:5ec12c64d558e300550be8',
     messagingSenderId: '626201418297',
     projectId: 'dummy-da4f8',
+    databaseURL: 'https://dummy-da4f8-default-rtdb.firebaseio.com',
     storageBucket: 'dummy-da4f8.appspot.com',
     iosBundleId: 'com.example.flutterFirebaseUi',
   );
@@ -82,7 +86,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '626201418297',
     projectId: 'dummy-da4f8',
     authDomain: 'dummy-da4f8.firebaseapp.com',
+    databaseURL: 'https://dummy-da4f8-default-rtdb.firebaseio.com',
     storageBucket: 'dummy-da4f8.appspot.com',
     measurementId: 'G-HN8RFY5W4B',
   );
+
 }

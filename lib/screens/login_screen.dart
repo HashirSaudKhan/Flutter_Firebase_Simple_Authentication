@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
       // CircularProgressIndicator stop when account login successfully
       loadingcircle.loading = false;
 
-      Navigator.push(
+      Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const HomeScreen()));
       Utils.toastmsg(context, value.user!.email.toString());
     }).onError((error, stackTrace) {
