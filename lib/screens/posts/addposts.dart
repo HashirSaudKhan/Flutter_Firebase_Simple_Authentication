@@ -45,11 +45,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
               return RoundButton(
                   title: 'Add',
                   onTap: () {
+                    final id = DateTime.now().millisecondsSinceEpoch.toString();
                     loadingcircle.loading = true;
-                    databaseref
-                        .child(DateTime.now().millisecondsSinceEpoch.toString())
-                        .set({
-                      'id': DateTime.now().millisecondsSinceEpoch.toString(),
+                    databaseref.child(id).set({
+                      'id': id,
                       'title': postController.text.toString()
                     }).then((value) {
                       loadingcircle.loading = false;

@@ -20,6 +20,9 @@ class _HomeScreenState extends State<HomeScreen> {
 // search filter controller
   final searchFilter = TextEditingController();
 
+// Update controller
+  final editcontroller = TextEditingController();
+
 // user sign out
   Future<void> signUserOut() async {
     await FirebaseAuth.instance.signOut();
@@ -71,9 +74,35 @@ class _HomeScreenState extends State<HomeScreen> {
                 final title = snapshot.child('title').value.toString();
                 if (searchFilter.text.isEmpty) {
                   return ListTile(
-                    title: Text(snapshot.child('title').value.toString()),
-                    subtitle: Text(snapshot.child('id').value.toString()),
-                  );
+                      title: Text(snapshot.child('title').value.toString()),
+                      subtitle: Text(snapshot.child('id').value.toString()),
+                      trailing: PopupMenuButton(
+                        icon: const Icon(Icons.more_vert),
+                        itemBuilder: ((context) => [
+                              PopupMenuItem(
+                                  onTap: () {
+                                    showMyDialog(title,
+                                        snapshot.child('id').value.toString());
+                                  },
+                                  child: const ListTile(
+                                    leading: Icon(Icons.edit),
+                                    title: Text('update'),
+                                  )),
+                              PopupMenuItem(
+                                  onTap: () {
+                                    ref
+                                        .child(snapshot
+                                            .child('id')
+                                            .value
+                                            .toString())
+                                        .remove();
+                                  },
+                                  child: const ListTile(
+                                    leading: Icon(Icons.delete),
+                                    title: Text('Delete'),
+                                  ))
+                            ]),
+                      ));
                 } else if (title
                     .toLowerCase()
                     .contains(searchFilter.text.toLowerCase())) {
@@ -103,5 +132,42 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> showMyDialog(String title, String id) async {
+    editcontroller.text = title;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Update'),
+            content: TextField(
+              controller: editcontroller,
+              decoration: const InputDecoration(
+                hintText: 'Edit',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Cancel')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    ref.child(id).update({
+                      'title': editcontroller.text.toLowerCase()
+                    }).then((value) {
+                      Utils.toastmsg(context, 'updated');
+                    }).onError((error, stackTrace) {
+                      Utils.toastmsg(context, error.toString());
+                    });
+                  },
+                  child: const Text('Update'))
+            ],
+          );
+        });
   }
 }
