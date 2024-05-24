@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_ui/Providers/loadingcircleprovider.dart';
-import 'package:flutter_firebase_ui/screens/homescreen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_firebase_ui/screens/checklogin.dart';
+import 'package:flutter_firebase_ui/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       create: (_) => LoadingCircleProvider(),
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomeScreen(),
+        home: CheckLogin(),
       ),
     );
   }
