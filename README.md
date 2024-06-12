@@ -1,5 +1,5 @@
 # flutter_firebase_ui
-### SignIn
+### SignIn/LogIn 
 ### SignUp
 ### Firebase Real Time CRUD
 
